@@ -1,4 +1,7 @@
+import React from "react";
 import Header from "../components/Header";
+import { getProjects } from "../services";
+import ProjectCard from '../components/ProjectCard';
 
 const style = {
   main: {
@@ -7,6 +10,14 @@ const style = {
     alignItems: "center",
     justifyContent: "center",
     width: "100vw",
+  },
+  projectsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
   },
   h1: {
     fontSize: "8vh",
@@ -23,18 +34,30 @@ const style = {
     zIndex: "-1",
   },
   threelineTop: {
-    position: "absolute",
     width: "100%",
-    bottom: "0",
     zIndex: "-5",
+    marginTop: "-66vh",
   },
 };
 
 function Projects() {
+  const [projects, setProjects] = React.useState([]);
+
+  React.useEffect(() => {
+    getProjects().then((data) => {
+      setProjects(data);
+    });
+  }, []);
+
   return (
     <div style={style.main}>
       <Header />
       <h1 style={style.h1}>Check my projects</h1>
+      <div style={style.projectsContainer}>
+        {projects.map((project) => (
+          <ProjectCard key={project.id} project={project} />
+        ))}
+      </div>
       <img
         style={style.onelineTop}
         src="./src/assets/svgs/oneline.svg"
