@@ -1,5 +1,5 @@
 import Header from "../components/Header";
-import { Colors } from "../assets/color.js";
+import ContactForm from '../components/ContactForm';
 
 const style = {
   main: {
@@ -87,24 +87,6 @@ const style = {
     fontWeight: "normal",
     padding: "0",
     margin: "0",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "60%",
-  },
-  input: {
-    width: "50vh",
-    height: "2vh",
-    fontSize: "3vh",
-    margin: "1vh",
-    padding: "1vh",
-    border: "none",
-    borderRadius: "10px",
-    color: Colors.primary,
-    backgroundColor: Colors.button
   },
 };
 
@@ -212,12 +194,7 @@ function Profile() {
       />
       <div style={style.section}>
         <h1 style={style.h1}>Contact me</h1>
-        <form style={style.form} action='mailto:tommjobit@live.fr' method='post' encType='text/plain'>
-            <input style={style.input} type='email' placeholder='Your email' />
-            <input style={style.input} type='text' placeholder='Subject' />
-            <textarea placeholder='Your message'></textarea>
-            <button type='submit'>Send</button>
-        </form>
+        <ContactForm />
       </div>
     </div>
   );
