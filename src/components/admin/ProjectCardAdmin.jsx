@@ -1,9 +1,8 @@
 import React from "react";
-import Tag from "./Tag";
-import { Colors } from "../assets/color";
+import { Colors } from "../../assets/color";
 import { Link } from "react-router-dom";
 
-function ProjectCard({ project }) {
+function ProjectCardAdmin({ project }) {
   const [isHovered, setIsHovered] = React.useState(false);
 
   const style = {
@@ -13,7 +12,7 @@ function ProjectCard({ project }) {
       alignItems: "center",
       justifyContent: "space-between",
       width: "25vw",
-      height: "40vh",
+      height: "30vh",
       padding: "10px",
       margin: "10px",
       borderRadius: "40px",
@@ -54,27 +53,12 @@ function ProjectCard({ project }) {
   }
 
   return (
-    <Link style={style.card} to={"/projectInfos/" + project.id} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <Link style={style.card} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <h3 style={style.h3}>{project.name}</h3>
       <img style={style.img} src={project.thumbnailUrl} alt={project.name} />
       <p>{project.description}</p>
-      <div style={style.tagsContainer}>
-        {project.tags.map((tag, index) => {
-          if (index < 3) {
-            return <Tag key={index} name={tag} color={Colors.button} />;
-          } else if (index === 3) {
-            return (
-              <Tag
-                key={index}
-                name={`${project.tags.length - 3} more`}
-                color={Colors.secondary}
-              />
-            );
-          }
-        })}
-      </div>
     </Link>
   );
 }
 
-export default ProjectCard;
+export default ProjectCardAdmin;

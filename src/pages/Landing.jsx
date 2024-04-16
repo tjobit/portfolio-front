@@ -1,5 +1,9 @@
+import React from "react";
 import Header from "../components/Header";
 import { TypeAnimation } from "react-type-animation";
+import { Modal, Box, TextField, Button } from "@mui/material";
+import { Colors } from "../assets/color";
+import { login } from "../services";
 
 const style = {
   main: {
@@ -45,15 +49,64 @@ const style = {
   profilePicture: {
     width: "35vh",
   },
+  modal: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "40vw",
+    bgcolor: Colors.third,
+    boxShadow: 24,
+    p: 4,
+    borderRadius: "10px",
+  },
+  adminConnect: {
+    position: "absolute",
+    bottom: "1vh",
+    right: "1vh",
+    cursor: "pointer",
+  },
+  modalContent: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
 };
 
 function Landing() {
+  const [open, setOpen] = React.useState(false);
+  const [errorConnection, setErrorConnection] = React.useState(false);
+  function handleOpen() {
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (accessToken) {
+      window.location.href = "/adminProjects";
+    } else {
+      setOpen(true)
+    }
+  }
+
+  const handleClose = () => setOpen(false);
+
+  async function handleConnection() {
+    const name = document.getElementById("name").value;
+    const password = document.getElementById("password").value;
+    const data = await login(name, password);
+    if (data.accessToken) {
+      window.location.href = "/adminProjects";
+    } else {
+      setErrorConnection(true);
+    }
+  }
+
   return (
     <div style={style.main}>
       <Header />
       <div style={style.introduction}>
         <h1 style={style.h1}>
-          I’m Tomm Jobit, I like 
+          I’m Tomm Jobit, I like
           <TypeAnimation
             sequence={[
               " React",
@@ -75,13 +128,65 @@ function Landing() {
               " Electron",
               1000,
             ]}
-            wrapper='span'
+            wrapper="span"
             repeat={Infinity}
             speed={50}
-            />
+          />
         </h1>
         <h2 style={style.h2}>Developing things with my friends</h2>
-        <img style={style.profilePicture} src="./src/assets/svgs/me.svg" alt="picture me" />
+        <img
+          style={style.profilePicture}
+          src="./src/assets/svgs/me.svg"
+          alt="picture me"
+        />
+      </div>
+      <div style={style.adminConnect}>
+        <img onClick={handleOpen} src="./src/assets/svgs/admin.svg" />
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style.modal}>
+            <div style={style.modalContent}>
+              <h2 style={style.h2}>Admin connection</h2>
+              <TextField
+                id="name"
+                label="Name"
+                variant="outlined"
+                style={{ width: "100%" }}
+                margin="normal"
+                required
+              />
+              <TextField
+                id="password"
+                label="Password"
+                variant="outlined"
+                style={{ width: "100%" }}
+                margin="normal"
+                required
+                type="password"
+              />
+              {errorConnection && (
+                <div style={{ color: "red" }}>Wrong name or password</div>
+              )}
+              <Button
+                style={{
+                  backgroundColor: Colors.button,
+                  color: Colors.font,
+                  width: "20%",
+                  margin: "20px 0",
+                }}
+                variant="contained"
+                type="submit"
+                onClick={handleConnection}
+              >
+                Connect
+              </Button>
+            </div>
+          </Box>
+        </Modal>
       </div>
       <img style={style.threelines} src="./src/assets/svgs/threeline.svg" />
       <img style={style.oneline} src="./src/assets/svgs/oneline.svg" />
