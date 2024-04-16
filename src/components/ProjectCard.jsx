@@ -1,6 +1,7 @@
 import React from "react";
 import Tag from "./Tag";
 import { Colors } from "../assets/color";
+import { Link } from "react-router-dom";
 
 function ProjectCard({ project }) {
   const [isHovered, setIsHovered] = React.useState(false);
@@ -21,6 +22,8 @@ function ProjectCard({ project }) {
       transform: isHovered ? 'scale(1.05)' : 'scale(1)',
       cursor: isHovered ? 'pointer' : 'default',
       transition: "0.3s",
+      textDecoration: "none",
+      color: Colors.font,
     },
     img: {
       width: "auto",
@@ -41,7 +44,7 @@ function ProjectCard({ project }) {
       width: "100%",
     },
   };
-  
+
   function handleMouseEnter() {
     setIsHovered(true);
   }
@@ -51,7 +54,7 @@ function ProjectCard({ project }) {
   }
 
   return (
-    <div style={style.card} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} >
+    <Link style={style.card} to={"/projectInfos/" + project.id} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <h3 style={style.h3}>{project.name}</h3>
       <img style={style.img} src={project.thumbnailUrl} alt={project.name} />
       <p>{project.description}</p>
@@ -70,7 +73,7 @@ function ProjectCard({ project }) {
           }
         })}
       </div>
-    </div>
+    </Link>
   );
 }
 

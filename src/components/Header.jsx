@@ -28,7 +28,7 @@ function Header() {
     <header style={style.header}>
         <div>
             <Link to="/">
-                <img src="./src/assets/svgs/home.svg" alt="home icon" />
+                <img src="../src/assets/svgs/home.svg" alt="home icon" />
             </Link>
         </div>
         <div style={style.linksContainer}>

@@ -7,6 +7,8 @@ import {
 import Landing from './pages/Landing'
 import Profile from './pages/Profile'
 import Projects from './pages/Projects'
+import ProjectInfos from './pages/ProjectInfos'
+import { getProject } from './services'
 import './index.css'
 
 const router = createBrowserRouter([
@@ -21,6 +23,15 @@ const router = createBrowserRouter([
   {
     path: '/projects',
     element: <Projects />
+  },
+  {
+    path: '/projectInfos/:id',
+    element: <ProjectInfos />,
+    loader: async ({ params }) => {
+      return {
+        project: await getProject(params.id)
+      }
+    }
   }
 ])
 
