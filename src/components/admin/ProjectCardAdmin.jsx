@@ -2,7 +2,7 @@ import React from "react";
 import { Colors } from "../../assets/color";
 import { Link } from "react-router-dom";
 
-function ProjectCardAdmin({ project }) {
+function ProjectCardAdmin({ project, setCurrentProject}) {
   const [isHovered, setIsHovered] = React.useState(false);
 
   const style = {
@@ -53,7 +53,7 @@ function ProjectCardAdmin({ project }) {
   }
 
   return (
-    <Link style={style.card} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <Link style={style.card} onClick={() => setCurrentProject(project.id)} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <h3 style={style.h3}>{project.name}</h3>
       <img style={style.img} src={project.thumbnailUrl} alt={project.name} />
       <p>{project.description}</p>
