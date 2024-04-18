@@ -3,7 +3,12 @@ import { Colors } from "../../assets/color";
 import HeaderAdmin from "../../components/admin/HeaderAdmin";
 import ProjectSelector from "../../components/admin/ProjectSelector";
 import { TextField, Button } from "@mui/material";
-import { addProject, getProject, updateProject, deleteProject } from "../../services";
+import {
+  addProject,
+  getProject,
+  updateProject,
+  deleteProject,
+} from "../../services";
 
 const style = {
   global: {
@@ -34,11 +39,26 @@ const style = {
     justifyContent: "space-evenly",
     width: "100%",
   },
+  textLabelWError: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  shortTextLabelWError: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "90%",
+  },
 };
 
 function AdminProjects() {
   const [name, setName] = React.useState("");
-  const [description, setDescription] = React.useState("");
+  const [shortDescription, setShortDescription] = React.useState("");
+  const [longDescription, setLongDescription] = React.useState("");
   const [thumbnailUrl, setThumbnailUrl] = React.useState("");
   const [pictures, setPictures] = React.useState([]);
   const [nbParticipants, setNbParticipants] = React.useState(1);
@@ -55,8 +75,12 @@ function AdminProjects() {
     setName(e.target.value);
   };
 
-  const handleDescription = (e) => {
-    setDescription(e.target.value);
+  const handleShortDescription = (e) => {
+    setShortDescription(e.target.value);
+  };
+
+  const handleLongDescription = (e) => {
+    setLongDescription(e.target.value);
   };
 
   const handleThumbnail = (e) => {
@@ -92,10 +116,11 @@ function AdminProjects() {
   };
 
   async function handleAddProject() {
-    if (!formValid()) return;
+    if (!formValid() || !validLimits()) return;
     const result = await addProject(
       name,
-      description,
+      shortDescription,
+      longDescription,
       nbParticipants,
       tags,
       githubUrl,
@@ -116,7 +141,8 @@ function AdminProjects() {
   function formValid() {
     return (
       name !== "" &&
-      description !== "" &&
+      shortDescription !== "" &&
+      longDescription !== "" &&
       thumbnailUrl !== "" &&
       pictures.length > 0 &&
       nbParticipants > 0 &&
@@ -128,11 +154,37 @@ function AdminProjects() {
     );
   }
 
+  function validMaxPictures() {
+    return pictures.length <= 5;
+  }
+
+  function validMaxTags() {
+    return tags.length <= 10;
+  }
+
+  function validShortDescription() {
+    return shortDescription.length <= 80;
+  }
+
+  function validLongDescription() {
+    return longDescription.length <= 250;
+  }
+
+  function validLimits() {
+    return (
+      validMaxPictures() &&
+      validMaxTags() &&
+      validShortDescription() &&
+      validLongDescription()
+    );
+  }
+
   React.useEffect(() => {
     if (currentProject > 0) {
       getProject(currentProject).then((data) => {
         setName(data.name);
-        setDescription(data.description);
+        setShortDescription(data.shortDescription);
+        setLongDescription(data.longDescription);
         setThumbnailUrl(data.thumbnailUrl);
         setPictures(data.picturesUrl);
         setNbParticipants(data.nbParticipants);
@@ -144,7 +196,8 @@ function AdminProjects() {
       });
     } else {
       setName("");
-      setDescription("");
+      setShortDescription("");
+      setLongDescription("");
       setThumbnailUrl("");
       setPictures([]);
       setNbParticipants(1);
@@ -157,12 +210,13 @@ function AdminProjects() {
   }, [currentProject]);
 
   async function handleUpdateProject() {
-    if (!formValid()) return;
+    if (!formValid() || !validLimits()) return;
 
     const result = await updateProject(
       currentProject,
       name,
-      description,
+      shortDescription,
+      longDescription,
       nbParticipants,
       tags,
       githubUrl,
@@ -207,16 +261,39 @@ function AdminProjects() {
             value={name}
             onChange={handleName}
             variant="outlined"
-            style={{ width: "80%", margin: "20px 0" }}
+            style={{ width: "80%", margin: "10px 0" }}
           />
-          <TextField
-            label="Project Description"
-            placeholder="Project Description"
-            value={description}
-            onChange={handleDescription}
-            variant="outlined"
-            style={{ width: "80%", margin: "20px 0" }}
-          />
+          <div style={style.textLabelWError}>
+            <TextField
+              label="Short Project Description (80 char max)"
+              placeholder="Short Project Description"
+              value={shortDescription}
+              onChange={handleShortDescription}
+              variant="outlined"
+              style={{ width: "80%", margin: "10px 0" }}
+            />
+            {!validShortDescription() && (
+              <p style={{ color: "red" }}>
+                Short description must be 80 char max
+              </p>
+            )}
+          </div>
+          <div style={style.textLabelWError}>
+            <TextField
+              label="Long Project Description (250 char max)"
+              placeholder="Long Project Description"
+              value={longDescription}
+              onChange={handleLongDescription}
+              variant="outlined"
+              style={{ width: "80%", margin: "10px 0" }}
+            />
+            {!validLongDescription() && (
+              <p style={{ color: "red" }}>
+                Short description must be 80 char max
+              </p>
+            )}
+          </div>
+
           <div style={style.coupleContainer}>
             <TextField
               label="Thumbnail URL"
@@ -224,16 +301,19 @@ function AdminProjects() {
               value={thumbnailUrl}
               onChange={handleThumbnail}
               variant="outlined"
-              style={{ width: "35%", margin: "20px 0" }}
+              style={{ width: "35%", margin: "10px 0" }}
             />
             <TextField
-              label="Pictures URL"
+              label="Pictures URL (5 max)"
               placeholder="Pictures URL 1, Pictures URL 2, Pictures URL 3"
               value={pictures.toString()}
               onChange={handlePictures}
               variant="outlined"
-              style={{ width: "35%", margin: "20px 0" }}
+              style={{ width: "35%", margin: "10px 0" }}
             />
+            {!validMaxPictures() && (
+              <p style={{ color: "red" }}>5 pictures max</p>
+            )}
           </div>
           <div style={style.coupleContainer}>
             <TextField
@@ -241,16 +321,17 @@ function AdminProjects() {
               value={nbParticipants}
               onChange={handleNbParticipants}
               variant="outlined"
-              style={{ width: "35%", margin: "20px 0" }}
+              style={{ width: "35%", margin: "10px 0" }}
             />
             <TextField
-              label="Tags"
+              label="Tags (10 max)"
               placeholder="Tag1, Tag2, Tag3"
               value={tags.toString()}
               onChange={handleTags}
               variant="outlined"
-              style={{ width: "35%", margin: "20px 0" }}
+              style={{ width: "35%", margin: "10px 0" }}
             />
+            {!validMaxTags() && <p style={{ color: "red" }}>10 tags max</p>}
           </div>
           <div style={style.coupleContainer}>
             <TextField
@@ -259,7 +340,7 @@ function AdminProjects() {
               value={githubUrl}
               onChange={handleGithubUrl}
               variant="outlined"
-              style={{ width: "35%", margin: "20px 0" }}
+              style={{ width: "35%", margin: "10px 0" }}
             />
             <TextField
               label="Website URL"
@@ -267,7 +348,7 @@ function AdminProjects() {
               value={websiteUrl}
               onChange={handleWebsiteUrl}
               variant="outlined"
-              style={{ width: "35%", margin: "20px 0" }}
+              style={{ width: "35%", margin: "10px 0" }}
             />
           </div>
           <div style={style.coupleContainer}>
@@ -277,7 +358,7 @@ function AdminProjects() {
               value={startDate}
               onChange={handleStartDate}
               variant="outlined"
-              style={{ width: "35%", margin: "20px 0" }}
+              style={{ width: "35%", margin: "10px 0" }}
             />
             <TextField
               label="End date"
@@ -285,7 +366,7 @@ function AdminProjects() {
               value={endDate}
               onChange={handleEndDate}
               variant="outlined"
-              style={{ width: "35%", margin: "20px 0" }}
+              style={{ width: "35%", margin: "10px 0" }}
             />
           </div>
           {formValid() ? null : (

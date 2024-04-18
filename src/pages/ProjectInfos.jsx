@@ -98,7 +98,7 @@ function ProjectInfos() {
       <Header />
       <h1 style={style.h1}>{project.name}</h1>
       <img style={style.img} src={project.thumbnailUrl} alt={project.name} />
-      <p style={style.text}>{project.description}</p>
+      <p style={style.text}>{project.longDescription}</p>
       <img
         style={style.onelineTop}
         src="../src/assets/svgs/oneline.svg"

@@ -23,7 +23,7 @@ export async function login(name, password) {
   return result;
 }
 
-export async function addProject(name, description, nbParticipants, tags, githubUrl, websiteUrl, startDate, endDate, thumbnailUrl, picturesUrl) {
+export async function addProject(name, shortDescription, longDescription, nbParticipants, tags, githubUrl, websiteUrl, startDate, endDate, thumbnailUrl, picturesUrl) {
   const result = await fetch(`${baseUrl}/project`, {
     method: "POST",
     headers: {
@@ -32,7 +32,8 @@ export async function addProject(name, description, nbParticipants, tags, github
     },
     body: JSON.stringify({
       name,
-      description,
+      shortDescription,
+      longDescription,
       nbParticipants: parseInt(nbParticipants),
       tags,
       githubUrl,
@@ -47,9 +48,7 @@ export async function addProject(name, description, nbParticipants, tags, github
   return result;
 }
 
-export async function updateProject(id, name, description, nbParticipants, tags, githubUrl, websiteUrl, startDate, endDate, thumbnailUrl, picturesUrl) {
-  console.log("updateProject", id, name, description, nbParticipants, tags, githubUrl, websiteUrl, startDate, endDate, thumbnailUrl, picturesUrl)
-  
+export async function updateProject(id, name, shortDescription, longDescription, nbParticipants, tags, githubUrl, websiteUrl, startDate, endDate, thumbnailUrl, picturesUrl) {
   const result = await fetch(`${baseUrl}/project/${id}`, {
     method: "PUT",
     headers: {
@@ -58,7 +57,8 @@ export async function updateProject(id, name, description, nbParticipants, tags,
     },
     body: JSON.stringify({
       name,
-      description,
+      shortDescription,
+      longDescription,
       nbParticipants: parseInt(nbParticipants),
       tags,
       githubUrl,
@@ -85,5 +85,58 @@ export async function deleteProject(id) {
 }
 
 export async function getUsers() {
-  return fetch(`${baseUrl}/user`).then((res) => res.json());
+  const result = await fetch(`${baseUrl}/user`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+  }).then((res) => res.json());
+
+  return result;
+}
+
+export async function getUser(id) {
+  const result = await fetch(`${baseUrl}/user/${id}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+  }).then((res) => res.json());
+
+  return result;
+}
+
+export async function addUser(name, password) {
+  const result = await fetch(`${baseUrl}/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+    body: JSON.stringify({ name, password }),
+  }).then((res) => res.json());
+
+  return result;
+}
+
+export async function updateUser(id, name) {
+  const result = await fetch(`${baseUrl}/user/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+    body: JSON.stringify({ name }),
+  }).then((res) => res.json());
+
+  return result;
+}
+
+export async function deleteUser(id) {
+  const result = await fetch(`${baseUrl}/user/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+  }).then((res) => res.json());
+
+  return result;
 }

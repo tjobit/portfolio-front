@@ -57,7 +57,7 @@ function ProjectCard({ project }) {
     <Link style={style.card} to={"/projectInfos/" + project.id} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <h3 style={style.h3}>{project.name}</h3>
       <img style={style.img} src={project.thumbnailUrl} alt={project.name} />
-      <p>{project.description}</p>
+      <p>{project.shortDescription}</p>
       <div style={style.tagsContainer}>
         {project.tags.map((tag, index) => {
           if (index < 3) {
