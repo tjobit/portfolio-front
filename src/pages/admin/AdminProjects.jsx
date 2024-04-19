@@ -289,7 +289,7 @@ function AdminProjects() {
             />
             {!validLongDescription() && (
               <p style={{ color: "red" }}>
-                Short description must be 80 char max
+                Long description must be 250 char max
               </p>
             )}
           </div>

@@ -53,6 +53,9 @@ function Projects() {
     <div style={style.main}>
       <Header />
       <h1 style={style.h1}>Check my projects</h1>
+
+      {projects.length === 0 && <h1>No projects</h1>}
+
       <div style={style.projectsContainer}>
         {projects.map((project) => (
           <ProjectCard key={project.id} project={project} />
