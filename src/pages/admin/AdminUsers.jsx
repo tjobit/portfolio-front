@@ -66,8 +66,12 @@ function AdminUsers() {
     return name.length > 0 && password.length > 0;
   }
 
+  function formValidUpdate() {
+    return name.length > 0;
+  }
+
   async function handleAddUser() {
-    if(!formValid()) return;
+    if (!formValid()) return;
     const result = await addUser(name, password);
 
     if (result.error) {
@@ -78,6 +82,7 @@ function AdminUsers() {
   }
 
   async function handleUpdateUser() {
+    if (!formValidUpdate()) return;
     const result = await updateUser(currentUser, name);
 
     if (result.error) {
@@ -102,7 +107,11 @@ function AdminUsers() {
     <div style={style.global}>
       <HeaderAdmin />
       <div style={style.main}>
-        <UserSelector newUserAlert={newUserAlert} setNewUserAlert={setNewUserAlert} setCurrentUser={setCurrentUser} />
+        <UserSelector
+          newUserAlert={newUserAlert}
+          setNewUserAlert={setNewUserAlert}
+          setCurrentUser={setCurrentUser}
+        />
         <div style={style.sectionContainer}>
           <TextField
             label="Name"
@@ -123,10 +132,12 @@ function AdminUsers() {
             />
           )}
 
-          {!formValid() && (
-            <p style={{ color: "red" }}>
-              Please fill all fields
-            </p>
+          {!formValid() && currentUser == 0 && (
+            <p style={{ color: "red" }}>Please fill all fields</p>
+          )}
+
+          {!formValidUpdate() && currentUser > 0 && (
+            <p style={{ color: "red" }}>Please fill the field</p>
           )}
 
           {currentUser > 0 ? (
@@ -144,7 +155,6 @@ function AdminUsers() {
               </Button>
               <Button
                 onClick={handleUpdateUser}
-
                 style={{
                   backgroundColor: Colors.button,
                   color: Colors.primary,

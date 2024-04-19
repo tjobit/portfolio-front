@@ -11,6 +11,7 @@ import Projects from './pages/Projects'
 import ProjectInfos from './pages/ProjectInfos'
 import AdminProjects from './pages/admin/AdminProjects'
 import AdminUsers from './pages/admin/AdminUsers'
+import AdminMetrics from './pages/admin/AdminMetrics'
 import { getProject } from './services'
 import './index.css'
 
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
   {
     path: '/adminUsers',
     element: <ProtectedRoute element={<AdminUsers />} />
+  },
+  {
+    path: '/adminMetrics',
+    element: <ProtectedRoute element={<AdminMetrics />} />
   },
   {
     path: '*',

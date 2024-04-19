@@ -140,3 +140,13 @@ export async function deleteUser(id) {
 
   return result;
 }
+
+export async function getPicutres() {
+  const result = await fetch(`${baseUrl}/metric/pictures`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+  }).then((res) => res.json());
+
+  return result;
+}
